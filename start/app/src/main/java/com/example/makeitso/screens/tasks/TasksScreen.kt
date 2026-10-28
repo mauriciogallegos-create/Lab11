@@ -48,6 +48,7 @@ fun TasksScreen(
     .tasks
     .collectAsStateWithLifecycle(emptyList())
   TasksScreenContent(
+    tasks = tasks,
     onAddClick = viewModel::onAddClick,
     onSettingsClick = viewModel::onSettingsClick,
     onTaskCheckChange = viewModel::onTaskCheckChange,
@@ -63,6 +64,7 @@ fun TasksScreen(
 @ExperimentalMaterialApi
 fun TasksScreenContent(
   modifier: Modifier = Modifier,
+  tasks: State<List<Task>>,
   onAddClick: ((String) -> Unit) -> Unit,
   onSettingsClick: ((String) -> Unit) -> Unit,
   onTaskCheckChange: (Task) -> Unit,
@@ -92,7 +94,7 @@ fun TasksScreenContent(
       Spacer(modifier = Modifier.smallSpacer())
 
       LazyColumn {
-        items(emptyList<Task>(), key = { it.id }) { taskItem ->
+        items(tasks.value, key = { it.id }) { taskItem ->
           TaskItem(
             task = taskItem,
             options = listOf(),
@@ -111,6 +113,7 @@ fun TasksScreenContent(
 fun TasksScreenPreview() {
   MakeItSoTheme {
     TasksScreenContent(
+      tasks = remember { mutableStateOf<List<Task>>(emptyList()) },
       onAddClick = { },
       onSettingsClick = { },
       onTaskCheckChange = { },
